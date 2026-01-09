@@ -1,23 +1,28 @@
 [project]
-name = "sine-qua-non-backend"
+name = "auth-backend-django"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "pedrosimiao",email = "pedrolumiere@gmail.com"}
+    {name = "pedrosimiao", email = "pedrolumiere@gmail.com"}
 ]
-package-mode = false
 requires-python = ">=3.12"
 dependencies = [
     "django (==5.0)",
     "djangorestframework (>=3.16.1,<4.0.0)",
     "django-cors-headers (>=4.9.0,<5.0.0)",
-    "django-allauth (>=65.13.1,<66.0.0)",
+    "django-allauth[socialaccount] (>=65.13.1,<66.0.0)",
     "dj-rest-auth (>=7.0.1,<8.0.0)",
-    "redis (>=7.1.0,<8.0.0)",
-    "celery (>=5.6.0,<6.0.0)",
-    "requests (>=2.32.5,<3.0.0)"
+    "requests (>=2.32.5,<3.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "whitenoise (>=6.11.0,<7.0.0)",
+    "psycopg2-binary (>=2.9.11,<3.0.0)",
+    "dj-database-url (>=3.1.0,<4.0.0)"
 ]
 
+# ADICIONE ESTA SEÇÃO AQUI PARA DESATIVAR O MODO PACOTE
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -1,0 +1,30 @@
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+
+# Ambientes Virtuais
+.venv/
+venv/
+ENV/
+env/
+dist/
+build/
+
+# Variáveis de Ambiente
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Docker
+.docker
+
+# IDEs
+.vscode/
+.idea/
