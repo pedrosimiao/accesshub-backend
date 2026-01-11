@@ -154,15 +154,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #  URLs de retorno para o frontend
 FRONTEND_BASE = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
 
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    "CSRF_TRUSTED_ORIGINS", 
-    f"{FRONTEND_BASE},http://localhost:5173"
-).split(",")
+# 2. autoriza o navegador a permitir o acesso aos dados CORS
+CORS_ALLOWED_ORIGINS = [
+    FRONTEND_BASE,
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]
 
-CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS", 
-    f"{FRONTEND_BASE},http://localhost:5173"
-).split(",")
+# autoriza o recebimento de POST (frontend + auto-chamadas do Allauth)
+CSRF_TRUSTED_ORIGINS = [
+    FRONTEND_BASE,
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "https://marvellous-nora-accesshub-project-fd0e765b.koyeb.app",
+]
 
 # navegador envia o cookie 'sessionid' para o Django
 CORS_ALLOW_CREDENTIALS = True
