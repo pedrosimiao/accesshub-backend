@@ -193,24 +193,34 @@ CSRF_USE_SESSIONS = False
 
 SITE_ID = 1 
 
-ACCOUNT_SIGNUP_FIELDS = ['email*']
-ACCOUNT_LOGIN_METHODS = {'email'}
-
+# configs gerais de account manual
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-
-
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_SIGNUP_FIELDS = ['email*']
+ACCOUNT_LOGIN_METHODS = {'email'}
 
 # verificação obrigatória de email
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
-
 # adapter customizado
 ACCOUNT_ADAPTER = 'accesshub.adapters.MyAccountAdapter'
+
+
+# configs gerais de social account
+
+# adapter customizado
+SOCIALACCOUNT_ADAPTER = 'accesshub.adapters.MySocialAccountAdapter'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_ALLOW_REGISTRATION = True
+
+# ignorar verificação de e-mail para Google/GitHub
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -224,23 +234,21 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # URLs de retorno para o frontend
-SOCIALACCOUNT_LOGIN_REDIRECT_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173") + "/dashboard"
-LOGIN_REDIRECT_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173") + "/dashboard"
-LOGOUT_REDIRECT_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173") + "/login"
+FRONTEND_BASE = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
 
-# adapter customizado
-SOCIALACCOUNT_ADAPTER = 'accesshub.adapters.MySocialAccountAdapter'
+LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
+SOCIALACCOUNT_LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
+LOGOUT_REDIRECT_URL = f"{FRONTEND_BASE}/login"
 
 # Django redirecionando para o frontend local após o login social bem-sucedido
-SOCIALACCOUNT_ALLOW_REGISTRATION = True
 ACCOUNT_ALLOW_OAuth2_REDIRECT_WHITELIST = ['127.0.0.1:5173', 'localhost:5173']
-
 # Força o Django a aceitar redirecionamentos para hosts que não estão no ALLOWED_HOSTS (front local)
 ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
+
+
+
 
 # ==============================================================================
 # REST FRAMEWORK
