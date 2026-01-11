@@ -235,6 +235,13 @@ LOGOUT_REDIRECT_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173") + "/log
 # adapter customizado
 SOCIALACCOUNT_ADAPTER = 'accesshub.adapters.MySocialAccountAdapter'
 
+# Django redirecionando para o frontend local após o login social bem-sucedido
+SOCIALACCOUNT_ALLOW_REGISTRATION = True
+ACCOUNT_ALLOW_OAuth2_REDIRECT_WHITELIST = ['127.0.0.1:5173', 'localhost:5173']
+
+# Força o Django a aceitar redirecionamentos para hosts que não estão no ALLOWED_HOSTS (front local)
+ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
+
 # ==============================================================================
 # REST FRAMEWORK
 # ==============================================================================
