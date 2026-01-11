@@ -14,33 +14,27 @@ from allauth.account.adapter import DefaultAccountAdapter
 # model padrão de User do Django
 from django.contrib.auth.models import User
 
+
+
 # adapter customizado p/ login social
 # motivo: evitar duplicação de contas
 # 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     # metodo de chamada automatica antes do login via google/github
     def pre_social_login(self, request, sociallogin):
-        # se a conta social já existir no db
-        # então usuário já conectou via google/gitHub antes
+        # Se a conta social já estiver vinculada, não faz nada
         if sociallogin.is_existing:
-            # seguir fluxo normal, evitar duplicata de user
             return
-        
 
-        # email = email retornado pelo google/github
         email = sociallogin.user.email
-        
-        # se o provider retornou um email
         if email:
-            try:
-                # procura no db se algum user com esse email já existe
-                user = User.objects.get(email=email)
-                # se já existe conecta conta social com user existente
+            # pega o primeiro usuário com este e-mail
+            user = User.objects.filter(email=email).first()
+            if user:
+                # vincula e conecta o login do Google/GitHub ao usuário do banco
                 sociallogin.connect(request, user)
-            except User.DoesNotExist:
-                # se user com esse email não existe
-                # deixar o allauth criar um novo user
-                pass
+
+
 
 # adapter customizado p/ signup/login manual (email + senha)
 class MyAccountAdapter(DefaultAccountAdapter):
@@ -51,7 +45,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
         # pois username esta desativado no formulario
         user = super().save_user(request, user, form, commit=False)
         
-        # sinc username & email p evitar IntegrityError no SQLite
+        # sinc username & email p evitar erros de integridade
         user.username = user.email
 
         # se commit=True -> salva user 
