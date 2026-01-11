@@ -148,42 +148,39 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ==============================================================================
-# ***** CONFIGURAÇÕES DE COOKIE E CORS (PARA VITE 5173) *****
+# ***** CONFIGS DE COOKIE E CORS *****
 # ==============================================================================
+#
+#  URLs de retorno para o frontend
+FRONTEND_BASE = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     "CSRF_TRUSTED_ORIGINS", 
-    "http://127.0.0.1:5173"
+    f"{FRONTEND_BASE},http://localhost:5173"
 ).split(",")
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS", 
-    "http://127.0.0.1:5173"
+    f"{FRONTEND_BASE},http://localhost:5173"
 ).split(",")
 
 # navegador envia o cookie 'sessionid' para o Django
 CORS_ALLOW_CREDENTIALS = True
 
-# 'Lax' permite que o cookie de sessão persista 
-# ao redirecionamento (Google OAuth)
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
 
-# não havendo domínio definido no .env, usar o ip local
-SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", "127.0.0.1")
-CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", "127.0.0.1")
+SESSION_COOKIE_SECURE = True 
+CSRF_COOKIE_SECURE = True
 
-# cookie config (Ajuste fino para HTTPS)
-# (quando DEBUG=False) -> cookies seguros.
-SESSION_COOKIE_SECURE = not DEBUG 
-CSRF_COOKIE_SECURE = not DEBUG
+# permitir que o cookie seja aceito vindo do localhost
+SESSION_COOKIE_DOMAIN = None
+CSRF_COOKIE_DOMAIN = None
 
 # segurança contra XSS (JavaScript não lê o cookie de sessão)
 SESSION_COOKIE_HTTPONLY = True
-
 # false p/ que o Axios (via js-cookie) leia o 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False  
-
 # django sempre envia o Cookie CSRF em cada resposta
 CSRF_USE_SESSIONS = False
 
@@ -235,8 +232,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-# URLs de retorno para o frontend
-FRONTEND_BASE = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
 
 LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
 SOCIALACCOUNT_LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
