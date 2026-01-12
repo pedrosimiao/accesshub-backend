@@ -182,6 +182,9 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_DOMAIN = None
 CSRF_COOKIE_DOMAIN = None
 
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+
 # segurança contra XSS (JavaScript não lê o cookie de sessão)
 SESSION_COOKIE_HTTPONLY = True
 # false p/ que o Axios (via js-cookie) leia o 'csrftoken'
