@@ -8,7 +8,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # views
-from accesshub.views import import get_csrf_token
+from accesshub.views import get_csrf_token
 
 # lista de urls do projeti
 urlpatterns = [
