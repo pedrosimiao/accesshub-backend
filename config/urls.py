@@ -7,6 +7,9 @@ from django.contrib import admin
 # funçoes de definição de rotas
 from django.urls import path, include
 
+# views
+from accesshub.views import import get_csrf_token
+
 # lista de urls do projeti
 urlpatterns = [
     # rota p/ painel admin do Django
