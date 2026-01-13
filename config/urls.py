@@ -14,6 +14,10 @@ urlpatterns = [
     
     # endpoints REST de autenticação (login/logout/user)
     path("api/v1/auth/", include("dj_rest_auth.urls")),
+
+    # endpoint de entrega do token ao browser
+    path('api/v1/auth/csrf/', get_csrf_token, name='get_csrf_token'),
+
     # endpoints de registro (signup)
     path("api/v1/auth/registration/", include("dj_rest_auth.registration.urls")),
 

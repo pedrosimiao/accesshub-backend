@@ -1,10 +1,10 @@
-from django.shortcuts import render
+# accesshub/views.py
 
-# Create your views here.
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-
-"""
-Precisamos configurar LOGIN_REDIRECT_URL?
-A falta de configuração ACCOUNT_EMAIL_VERIFICATION = 'none' pode estar gerando o entrave?
-
-"""
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    # forçar o Django a enviar o Set-Cookie: csrftoken
+    return JsonResponse({"detail": "CSRF cookie set"})
