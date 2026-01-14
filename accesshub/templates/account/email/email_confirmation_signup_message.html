@@ -5,33 +5,25 @@
         <tr>
             <td align="center">
                 <div style="max-width: 420px; background-color: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 40px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
-                    
                     <h1 style="color: #ffffff; font-size: 26px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.025em;">
                         Confirmar Conta
                     </h1>
-                    
                     <p style="color: #71717a; font-size: 14px; font-style: italic; margin-bottom: 30px;">
                         Bem-vindo ao AccessHub
                     </p>
-
                     <div style="border-top: 1px solid #27272a; margin-bottom: 30px;"></div>
-
-                    <p style="color: #a1a1aa; font-size: 15px; line-height: 1.6; margin-bottom: 32px;">
-                        Para concluir sua inscrição e acessar a plataforma, confirme sua identidade clicando no botão abaixo:
+                    <p style="color: #a1a1aa; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+                        Seu código de verificação é:
                     </p>
-
+                    <div style="background-color: #09090b; border: 1px solid #3f3f46; color: #ffffff; font-size: 32px; font-weight: 700; letter-spacing: 0.3em; padding: 20px; border-radius: 8px; margin-bottom: 32px; font-family: monospace;">
+                        {{ otp_code }}
+                    </div>
                     <a href="{{ activate_url }}" style="display: inline-block; background-color: #f4f4f5; color: #09090b; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.2s;">
-                        Finalizar Cadastro
+                        Ir para Verificação
                     </a>
-
-                    <p style="color: #52525b; font-size: 11px; margin-top: 35px; line-height: 1.6;">
-                        Se o botão não funcionar, copie este link:<br>
-                        <span style="color: #3b82f6;">{{ activate_url }}</span>
-                    </p>
-
                     <div style="margin-top: 40px; border-top: 1px solid #27272a; padding-top: 25px;">
                         <p style="color: #3f3f46; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; margin: 0;">
-                            AccessHub v1.0
+                            AccessHub Security v1.0
                         </p>
                     </div>
                 </div>

@@ -1,0 +1,1 @@
+AccessHub - Seu código de verificação: {{ otp_code }}

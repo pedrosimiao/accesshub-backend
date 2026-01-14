@@ -9,6 +9,7 @@ from django.urls import path, include
 
 # views
 from accesshub.views import get_csrf_token
+from allauth.account.views import confirm_email
 
 # lista de urls do projeti
 urlpatterns = [
@@ -23,6 +24,9 @@ urlpatterns = [
 
     # endpoints de registro (signup)
     path("api/v1/auth/registration/", include("dj_rest_auth.registration.urls")),
+
+    # dj-rest-auth busca a lógica de verificação
+    path("api/v1/auth/registration/account-confirm-email/<str:key>/", confirm_email, name="account_confirm_email"),
 
     # endpoints de login social google & github
     path("api/v1/auth/", include("allauth.socialaccount.providers.google.urls")),

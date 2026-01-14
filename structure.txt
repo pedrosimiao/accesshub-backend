@@ -10,6 +10,11 @@ C:\Users\simia\Desktop\portfolio-projects\auth-backend-django
 |  |     └── __init__.cpython-312.pyc
 |  ├── models.py
 |  ├── serializers.py
+|  ├── templates
+|  |  └── account
+|  |     └── email
+|  |        ├── email_confirmation_signup_message.html
+|  |        └── email_confirmation_signup_subject.txt
 |  ├── tests.py
 |  ├── views.py
 |  ├── __init__.py
@@ -32,12 +37,14 @@ C:\Users\simia\Desktop\portfolio-projects\auth-backend-django
 |     ├── wsgi.cpython-312.pyc
 |     └── __init__.cpython-312.pyc
 ├── db.sqlite3
+├── Dockerfile
+├── entrypoint.sh
 ├── manage.py
 ├── poetry.lock
 ├── pyproject.toml
 └── structure.txt
 
-directory: 6 file: 30
+directory: 9 file: 34
 
 
 

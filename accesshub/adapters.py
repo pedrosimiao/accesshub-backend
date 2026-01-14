@@ -7,6 +7,10 @@
 # ACCOUNT_ADAPTER = 'accesshub.adapters.MyAccountAdapter'
 # SOCIALACCOUNT_ADAPTER = 'accesshub.adapters.MySocialAccountAdapter'  
 
+import os
+import secrets
+import string
+
 # adapter padrão de login social do Allauth
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 # adapter padrão de contas (signup/login manual) do alauth
@@ -54,10 +58,21 @@ class MyAccountAdapter(DefaultAccountAdapter):
         # retorna o user
         return user
 
-    # metodo p/ definir url enviada no email
-    def get_email_confirmation_url(self, request, emailconfirmation):
-        # sobrescricao da url do email para apontar para o frontend React
-        # retorna http://127.0.0.1:5173/confirm-email/chave_gerada
-        return f"http://127.0.0.1:5173/confirm-email/{emailconfirmation.key}"
+    # sobrescrição a geração da chave para ser um código numérico de 6 dígitos
+    def generate_email_confirmation_key(self, email):
+        return ''.join(secrets.choice(string.digits) for _ in range(6))
 
-    
+    def send_confirmation_mail(self, request, emailconfirmation, signup):
+        if signup:
+            # chave de 6 números (ex: 482910)
+            otp_code = emailconfirmation.key
+            
+            ctx = {
+                "user": emailconfirmation.email_address.user,
+                "otp_code": otp_code,
+                # apontando para a rota sem o parâmetro na URL
+                "activate_url": f"{os.getenv('FRONTEND_URL')}/confirm-email", 
+            }
+            
+            self.send_mail("account/email/email_confirmation_signup", 
+                emailconfirmation.email_address.email, ctx)

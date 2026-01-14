@@ -209,9 +209,11 @@ ACCOUNT_SIGNUP_FIELDS = ['email*']
 ACCOUNT_LOGIN_METHODS = {'email'}
 
 # verificação obrigatória de email
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# confirmação automatica por link GET desativada
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+# logar o user assim que o código certo for digitado
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # adapter customizado
 ACCOUNT_ADAPTER = 'accesshub.adapters.MyAccountAdapter'
