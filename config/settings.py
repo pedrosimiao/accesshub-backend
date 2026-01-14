@@ -130,10 +130,10 @@ if database_url:
 
 
 AUTHENTICATION_BACKENDS = [
-    # backend padrão django
-    'django.contrib.auth.backends.ModelBackend',
     # backend allauth (email, social)
     'allauth.account.auth_backends.AuthenticationBackend',
+    # backend padrão django
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 LANGUAGE_CODE = "en-us"
@@ -200,12 +200,10 @@ CSRF_USE_SESSIONS = False
 
 SITE_ID = 1 
 
-# Remover: ACCOUNT_AUTHENTICATION_METHOD, ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = False
-
 # configs gerais de account manual
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_SIGNUP_FIELDS = ['email*']
 ACCOUNT_LOGIN_METHODS = {'email'}
@@ -278,12 +276,14 @@ REST_AUTH = {
     'USE_JWT': False,
     'SESSION_LOGIN': True,
     'REGISTER_SERIALIZER': 'accesshub.serializers.CustomRegisterSerializer',
+    'OLD_PASSWORD_FIELD_ENABLED': True,
 }
+
+
 
 # ==============================================================================
 # CONFIGURAÇÃO DE ENVIO DE E-MAIL (NOVO)
 # ==============================================================================
-
 
 # Backend de Console: em dev (if DEBUG) email aparece no terminal 
 # onde o servidor roda

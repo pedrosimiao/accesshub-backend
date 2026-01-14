@@ -63,16 +63,13 @@ class MyAccountAdapter(DefaultAccountAdapter):
         return ''.join(secrets.choice(string.digits) for _ in range(6))
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
-        if signup:
-            # chave de 6 números (ex: 482910)
-            otp_code = emailconfirmation.key
-            
-            ctx = {
-                "user": emailconfirmation.email_address.user,
-                "otp_code": otp_code,
-                # apontando para a rota sem o parâmetro na URL
-                "activate_url": f"{os.getenv('FRONTEND_URL')}/confirm-email", 
-            }
-            
-            self.send_mail("account/email/email_confirmation_signup", 
-                emailconfirmation.email_address.email, ctx)
+        # emailconfirmation.key tem 6 dígitos aqui 
+        # devido ao método acima
+        ctx = {
+            "user": emailconfirmation.email_address.user,
+            "otp_code": emailconfirmation.key, 
+            "activate_url": f"{os.getenv('FRONTEND_URL', 'http://127.0.0.1:5173')}/confirm-email",
+        }
+        
+        self.send_mail("account/email/email_confirmation_signup", 
+                      emailconfirmation.email_address.email, ctx)
