@@ -130,11 +130,10 @@ if database_url:
 
 
 AUTHENTICATION_BACKENDS = [
-    # backend allauth (email, social)
-    'allauth.account.auth_backends.AuthenticationBackend',
-    # backend padrão django
-    'django.contrib.auth.backends.ModelBackend',
+    "accesshub.backends.VerifiedEmailBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -255,8 +254,6 @@ ACCOUNT_ALLOW_OAuth2_REDIRECT_WHITELIST = ['127.0.0.1:5173', 'localhost:5173']
 ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
 
 
-
-
 # ==============================================================================
 # REST FRAMEWORK
 # ==============================================================================
@@ -264,7 +261,8 @@ ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
 REST_FRAMEWORK = {
     # autenticação via session
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication', 
+        'rest_framework.authentication.SessionAuthentication',
+        "rest_framework.authentication.TokenAuthentication",
     ),
     # user deve estar logado por padrão
     'DEFAULT_PERMISSION_CLASSES': (
@@ -321,7 +319,7 @@ LOGGING = {
         'django.security.csrf': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True, # Garante que suba para o root
+            'propagate': True,
         },
         'django.request': {
             'handlers': ['console'],

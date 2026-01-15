@@ -43,11 +43,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 # adapter customizado p/ signup/login manual (email + senha)
 class MyAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
-        # dj-rest-auth signup manual.
-        # chama o método original do allauth -> super.save_user(...)
-        # impede saving no banco antes do sinc de username e email
-        # pois username esta desativado no formulario
         user = super().save_user(request, user, form, commit=False)
+        
+        user.is_active = False
         
         # sinc username & email p evitar erros de integridade
         user.username = user.email
@@ -60,7 +58,9 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
     # sobrescrição a geração da chave para ser um código numérico de 6 dígitos
     def generate_email_confirmation_key(self, email):
+        print("ADAPTER FOI CHAMADO")
         return ''.join(secrets.choice(string.digits) for _ in range(6))
+
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         # emailconfirmation.key tem 6 dígitos aqui 
