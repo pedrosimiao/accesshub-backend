@@ -100,7 +100,8 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'templates')],
+        # caminho para templates dentro da pasta do app accesshub
+        "DIRS": [os.path.join(BASE_DIR, 'accesshub', 'templates')], 
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
