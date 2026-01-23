@@ -41,5 +41,5 @@ class CustomRegisterSerializer(RegisterSerializer):
         
         # força configuração do e-mail. 
         # MyAccountAdapter forçado a gerar a chave
-        setup_user_email(request, user, signup=True)
+        setup_user_email(request, user)
         return user
