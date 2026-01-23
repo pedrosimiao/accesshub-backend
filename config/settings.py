@@ -33,6 +33,8 @@ ALLOWED_HOSTS = os.getenv(
 
 # apps básicos Django
 INSTALLED_APPS = [
+    # meu app de autenticação 
+    "accesshub.apps.AccesshubConfig",
     # interface admin
     "django.contrib.admin",
     # sistema de users e auth
@@ -48,8 +50,6 @@ INSTALLED_APPS = [
     # sistema de sites (usado pelo Allauth para gerar urls)
     "django.contrib.sites", 
 
-    # meu app de autenticação 
-    "accesshub.apps.AccesshubConfig",
     # DRF 
     "rest_framework",
     # tokens de autenticação (dj-rest-auth exige)

@@ -16,6 +16,8 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 # modulo base de serializers do DRF
 from rest_framework import serializers
+# modulo de envio de email do allauth
+from allauth.account.utils import setup_user_email
 
 # serializer customizado 
 # herda comportamento padrão do serializer dj-rest-auth
@@ -32,3 +34,12 @@ class CustomRegisterSerializer(RegisterSerializer):
         data.pop('username', None)
         # retorna apenas email e senha
         return data
+
+    def save(self, request):
+        # salva o user user o comportamento default
+        user = super().save(request)
+        
+        # força configuração do e-mail. 
+        # MyAccountAdapter forçado a gerar a chave
+        setup_user_email(request, user, signup=True)
+        return user
