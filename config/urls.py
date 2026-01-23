@@ -6,6 +6,21 @@ from django.urls import path, include
 from accesshub.views import get_csrf_token
 from accesshub.auth_views import CustomLoginView, VerifyEmailCodeView
 from allauth.account.views import confirm_email
+from django.contrib.sites.models import Site # Importe o modelo
+
+# --- BLOCO DE REPARO TEMPORÁRIO ---
+try:
+    # Tenta garantir que o Site 1 exista para o allauth não quebrar
+    Site.objects.get_or_create(
+        id=1, 
+        defaults={
+            'domain': 'accesshub-backend-pqio.onrender.com', 
+            'name': 'AccessHub'
+        }
+    )
+except Exception:
+    pass 
+# ----------------------------------
 
 urlpatterns = [
 
