@@ -29,7 +29,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS", 
     "localhost,127.0.0.1,"
-    ".koyeb.app").split(",")
+    ".onrender.com").split(",")
 
 # apps básicos Django
 INSTALLED_APPS = [
@@ -161,7 +161,6 @@ CSRF_TRUSTED_ORIGINS = [origin for origin in env_csrf_origins if origin]
 CSRF_TRUSTED_ORIGINS += [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
-    "https://marvellous-nora-accesshub-project-fd0e765b.koyeb.app"
 ]
 
 # navegador envia o cookie 'sessionid' para o Django
