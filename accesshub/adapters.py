@@ -77,3 +77,12 @@ class MyAccountAdapter(DefaultAccountAdapter):
         
         self.send_mail("account/email/email_confirmation_signup", 
                     emailconfirmation.email_address.email, ctx)
+
+
+    def respond_user_inactive(self, request, user):
+        """
+        Sobrescreve o redirecionamento padrão. 
+        retornam None para que o dj-rest-auth possa 
+        retornar a resposta JSON de sucesso (201 Created) normalmente
+        """
+        return None

@@ -1,3 +1,5 @@
+# acceshub/auth_views.py
+
 from dj_rest_auth.views import LoginView
 from accesshub.exceptions import InactiveUserException
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
