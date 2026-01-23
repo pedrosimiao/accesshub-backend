@@ -51,5 +51,11 @@ urlpatterns = [
     # ========================
     path("api/v1/auth/", include("allauth.socialaccount.providers.google.urls")),
     path("api/v1/auth/", include("allauth.socialaccount.providers.github.urls")),
+
+    # ========================
+    # Dummies para evitar NoReverseMatch (Allauth interno)
+    # ========================
+    path("api/v1/auth/inactive/", lambda r: None, name="account_inactive"),
+    path("api/v1/auth/confirm-email-sent/", lambda r: None, name="account_email_verification_sent"),
 ]
 
