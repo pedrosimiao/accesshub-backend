@@ -13,4 +13,5 @@ python manage.py migrate --noinput
 echo "Iniciando servidor Gunicorn..."
 # inicia servidor web de produção
 # bind 0.0.0.0:8000 -> acesso ao container.
-exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
+# exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
+exec gunicorn config.wsgi:application --bind 0.0.0.0:$PORT

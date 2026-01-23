@@ -1,5 +1,7 @@
 #  accesshub/backends.py
 
+# AUTHENTICATION BACKEND
+
 from django.contrib.auth.backends import ModelBackend
 
 class VerifiedEmailBackend(ModelBackend):

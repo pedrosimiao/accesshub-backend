@@ -129,12 +129,6 @@ if database_url:
     DATABASES["default"] = dj_database_url.parse(database_url)
 
 
-AUTHENTICATION_BACKENDS = [
-    "accesshub.backends.VerifiedEmailBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
-
-
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -255,8 +249,13 @@ ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
 
 
 # ==============================================================================
-# REST FRAMEWORK
+# AUTH & REST FRAMEWORK
 # ==============================================================================
+
+AUTHENTICATION_BACKENDS = [
+    "accesshub.backends.VerifiedEmailBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 REST_FRAMEWORK = {
     # autenticação via session
@@ -264,9 +263,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         "rest_framework.authentication.TokenAuthentication",
     ),
-    # user deve estar logado por padrão
+    # user/sccount deve estar ativado/permitido por padrão
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'accesshub.permissions.IsActiveUser'
     )
 }
 

@@ -1,34 +1,55 @@
 # config/urls.py
 
-# denfinindo endpoints - portas de entrada da API
-
-# painel admin
 from django.contrib import admin
-# funçoes de definição de rotas
 from django.urls import path, include
 
-# views
 from accesshub.views import get_csrf_token
+from accesshub.auth_views import CustomLoginView, VerifyEmailCodeView
 from allauth.account.views import confirm_email
 
-# lista de urls do projeti
 urlpatterns = [
-    # rota p/ painel admin do Django
+
+    # ========================
+    # Admin
+    # ========================
     path("admin/", admin.site.urls),
-    
-    # endpoints REST de autenticação (login/logout/user)
+
+    # ========================
+    # Infra
+    # ========================
+    path("api/v1/auth/csrf/", get_csrf_token, name="get_csrf_token"),
+
+    # ========================
+    # Auth base (dj-rest-auth)
+    # ========================
+    path("api/v1/auth/login/", CustomLoginView.as_view(), name="rest_login"),
     path("api/v1/auth/", include("dj_rest_auth.urls")),
 
-    # endpoint de entrega do token ao browser
-    path('api/v1/auth/csrf/', get_csrf_token, name='get_csrf_token'),
-
-    # endpoints de registro (signup)
+    # ========================
+    # Register
+    # ========================
     path("api/v1/auth/registration/", include("dj_rest_auth.registration.urls")),
 
-    # dj-rest-auth busca a lógica de verificação
-    path("api/v1/auth/registration/account-confirm-email/<str:key>/", confirm_email, name="account_confirm_email"),
+    # fallback / compatibilidade allauth
+    path(
+        "api/v1/auth/registration/account-confirm-email/<str:key>/",
+        confirm_email,
+        name="account_confirm_email",
+    ),
 
-    # endpoints de login social google & github
+    # ========================
+    # Verificação manual por código
+    # ========================
+    path(
+        "api/v1/auth/verify-email/",
+        VerifyEmailCodeView.as_view(),
+        name="verify_email_code",
+    ),
+
+    # ========================
+    # Social login
+    # ========================
     path("api/v1/auth/", include("allauth.socialaccount.providers.google.urls")),
     path("api/v1/auth/", include("allauth.socialaccount.providers.github.urls")),
 ]
+

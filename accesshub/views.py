@@ -1,5 +1,7 @@
 # accesshub/views.py
 
+# INFRA HTTP
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token

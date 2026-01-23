@@ -1,13 +1,16 @@
 # accesshub/serializers.py
 
-# contrato da API
+
+# APPLICATION/CONTRACT LAYER
+
 # customizando o contrato entre frontend/backend
+
+# remoção do campo username
 
 # frontend envia: 
 # email 
 # password1 (senha)
 # password2 (confirmação de senha)
-# backend não espera mais username
 
 # serializer padrao de registro (dj-rest-auth)
 from dj_rest_auth.registration.serializers import RegisterSerializer

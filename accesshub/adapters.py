@@ -1,7 +1,11 @@
 # accesshub/adapters.py
 
-# definição da lógica de negócio
-# interrompendo o comportamento padrão do allauth
+
+# ADAPTER PATTERN + DOMAIN LOGIC
+
+
+# definição da lógica de negócios
+# interrompendo o comportamento padrão (fluxos internos) do allauth
 
 # adapters chamados automaticamente pelo allauth em settings.py
 # ACCOUNT_ADAPTER = 'accesshub.adapters.MyAccountAdapter'
@@ -72,4 +76,4 @@ class MyAccountAdapter(DefaultAccountAdapter):
         }
         
         self.send_mail("account/email/email_confirmation_signup", 
-                      emailconfirmation.email_address.email, ctx)
+                    emailconfirmation.email_address.email, ctx)

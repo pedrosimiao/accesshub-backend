@@ -1,0 +1,38 @@
+┌────────────────────────────┐
+│          FRONTEND          │
+└──────────────┬─────────────┘
+               │ HTTP
+               ▼
+┌────────────────────────────┐
+│        URL ROUTING         │
+│        config/urls.py      │
+└──────────────┬─────────────┘
+               ▼
+┌────────────────────────────┐
+│         VIEW LAYER         │
+│ accesshub/views.py         │  → infra (csrf)
+│ accesshub/auth_views.py    │  → identidade (login, verify)
+└──────────────┬─────────────┘
+               ▼
+┌────────────────────────────┐
+│     SECURITY / FIREWALL    │
+│ backends.py                │  → quem pode logar
+│ permissions.py             │  → quem pode acessar
+│ exceptions.py              │  → vocabulário de erro
+└──────────────┬─────────────┘
+               ▼
+┌────────────────────────────┐
+│   APPLICATION / CONTRACT   │
+│ serializers.py             │
+└──────────────┬─────────────┘
+               ▼
+┌────────────────────────────┐
+│         DOMAIN LAYER       │
+│ adapters.py                │
+│ signals.py                 │
+└──────────────┬─────────────┘
+               ▼
+┌────────────────────────────┐
+│            ORM             │
+│     django.contrib.auth    │
+└────────────────────────────┘
