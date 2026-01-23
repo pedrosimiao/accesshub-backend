@@ -62,27 +62,29 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
     # sobrescrição a geração da chave para ser um código numérico de 6 dígitos
     def generate_email_confirmation_key(self, email):
-        print("ADAPTER FOI CHAMADO")
-        return ''.join(secrets.choice(string.digits) for _ in range(6))
+        # gerando os 6 dígitos
+        code = ''.join(secrets.choice(string.digits) for _ in range(6))
+        # log do Render para cdebugar enquanto o SMTP não liga
+        print(f"DEBUG_OTP: O código gerado para {email} é {code}")
+        return code
 
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
-        # emailconfirmation.key tem 6 dígitos aqui 
-        # devido ao método acima
+        # emailconfirmation.key contém os 6 dígitos gerados acima
+        otp_code = emailconfirmation.key 
+        
         ctx = {
             "user": emailconfirmation.email_address.user,
-            "otp_code": emailconfirmation.key, 
+            "otp_code": otp_code, 
+            # fallback para FRONTEND_URL
             "activate_url": f"{os.getenv('FRONTEND_URL', 'http://127.0.0.1:5173')}/confirm-email",
         }
         
+        # Allauth busca:
+        # account/email/email_confirmation_signup_subject.txt
+        # account/email/email_confirmation_signup_message.html
         self.send_mail("account/email/email_confirmation_signup", 
                     emailconfirmation.email_address.email, ctx)
 
-
     def respond_user_inactive(self, request, user):
-        """
-        Sobrescreve o redirecionamento padrão. 
-        retornam None para que o dj-rest-auth possa 
-        retornar a resposta JSON de sucesso (201 Created) normalmente
-        """
         return None
