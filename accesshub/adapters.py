@@ -44,45 +44,36 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
 # adapter customizado p/ signup/login manual (email + senha)
 class MyAccountAdapter(DefaultAccountAdapter):
+
     def save_user(self, request, user, form, commit=True):
         user = super().save_user(request, user, form, commit=False)
         
+        # user começa inativo até confirmar o e-mail
         user.is_active = False
         
-        # sinc username & email p evitar erros de integridade
+        # sinc username e email: evitar erros de integridade/duplicidade
         user.username = user.email
 
-        # se commit=True -> salva user 
         if commit:
             user.save()
-        # retorna o user
         return user
 
-    # sobrescrição da geração defult de chave para código numérico de 6 dígitos
-    def generate_email_confirmation_key(self, email):
-        # gerando os 6 dígitos
+    def generate_email_verification_code(self):
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
-        # log do Render para cdebugar enquanto o SMTP não liga
-        print(f"DEBUG_OTP: O código gerado para {email} é {code}")
+        
+        print(f"DEBUG_OTP: O código gerado é {code}")
         return code
 
-
-    def send_confirmation_mail(self, request, emailconfirmation, signup):
-        # emailconfirmation.key contém os 6 dígitos gerados acima
-        otp_code = emailconfirmation.key 
+    def render_mail(self, template_prefix, email, context, headers=None):
+        # interceptacao da renderização do e-mail para injetar as variáveis 
+        # que o frontend e templates esperam
+        # if 'otp_code' disponível no template HTML
+        if 'key' in context:
+            context['otp_code'] = context['key']
         
-        ctx = {
-            "user": emailconfirmation.email_address.user,
-            "otp_code": otp_code, 
-            # fallback para FRONTEND_URL
-            "activate_url": f"{os.getenv('FRONTEND_URL', 'http://127.0.0.1:5173')}/confirm-email",
-        }
-        
-        # Allauth busca:
-        # account/email/email_confirmation_signup_subject.txt
-        # account/email/email_confirmation_signup_message.html
-        self.send_mail("account/email/email_confirmation_signup", 
-                    emailconfirmation.email_address.email, ctx)
+        return super().render_mail(template_prefix, email, context, headers)
 
     def respond_user_inactive(self, request, user):
+        # evita redirecionamentos automáticos do Django para páginas de erro 
+        # quando o usuário tenta logar sem estar com is_active=True.
         return None
