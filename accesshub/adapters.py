@@ -22,7 +22,10 @@ from allauth.account.adapter import DefaultAccountAdapter
 # model padrão de User do Django
 from django.contrib.auth.models import User
 
-
+import sys
+# debugagem temporaria:
+print(">>>> TESTE DE CARREGAMENTO DO ADAPTER <<<<")
+raise Exception("O ADAPTER FOI CARREGADO") # verificando se o app quebra no boot
 
 # adapter customizado p/ login social
 # motivo: evitar duplicação de contas
