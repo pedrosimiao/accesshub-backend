@@ -59,7 +59,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
             user.save()
         return user
 
-    def generate_email_verification_code(self)
+    def generate_email_verification_code(self):
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
         
         # log
