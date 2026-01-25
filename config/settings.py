@@ -208,6 +208,12 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 # logar o user assim que o código certo for digitado
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
+# NÃO USAR O FLUXO HMAC
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = False
+
+# código de confirmação expira em um dia
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+
 # adapter customizado
 ACCOUNT_ADAPTER = 'accesshub.adapters.MyAccountAdapter'
 
