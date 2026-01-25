@@ -46,34 +46,31 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 class MyAccountAdapter(DefaultAccountAdapter):
 
     def save_user(self, request, user, form, commit=True):
+        """
+        Personalização da criação do usuário:
+        Define is_active = False (requer confirmação)
+        Iguala username ao email para evitar conflitos
+        """
         user = super().save_user(request, user, form, commit=False)
-        
-        # user começa inativo até confirmar o e-mail
         user.is_active = False
-        
-        # sinc username e email: evitar erros de integridade/duplicidade
         user.username = user.email
 
         if commit:
             user.save()
         return user
 
-    def generate_email_verification_code(self):
+    def generate_email_verification_code(self)
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
         
-        print(f"DEBUG_OTP: O código gerado é {code}")
+        # log
+        print(f"DEBUG_OTP: Código gerado: {code}")
         return code
 
     def render_mail(self, template_prefix, email, context, headers=None):
-        # interceptacao da renderização do e-mail para injetar as variáveis 
-        # que o frontend e templates esperam
-        # if 'otp_code' disponível no template HTML
         if 'key' in context:
             context['otp_code'] = context['key']
         
         return super().render_mail(template_prefix, email, context, headers)
 
     def respond_user_inactive(self, request, user):
-        # evita redirecionamentos automáticos do Django para páginas de erro 
-        # quando o usuário tenta logar sem estar com is_active=True.
         return None
