@@ -22,11 +22,6 @@ from allauth.account.adapter import DefaultAccountAdapter
 # model padrão de User do Django
 from django.contrib.auth.models import User
 
-import sys
-# debugagem temporaria:
-print(">>>> TESTE DE CARREGAMENTO DO ADAPTER <<<<")
-raise Exception("O ADAPTER FOI CARREGADO") # verificando se o app quebra no boot
-
 # adapter customizado p/ login social
 # motivo: evitar duplicação de contas
 # 
@@ -63,7 +58,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
         # retorna o user
         return user
 
-    # sobrescrição da geração defult de chave para ser virar código numérico de 6 dígitos
+    # sobrescrição da geração defult de chave para código numérico de 6 dígitos
     def generate_email_confirmation_key(self, email):
         # gerando os 6 dígitos
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
