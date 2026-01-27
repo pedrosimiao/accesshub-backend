@@ -33,12 +33,12 @@ class MyAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         user = super().save_user(request, user, form, commit=False)
         
-        # O Ponto Crucial: Diferenciando Manual de Social
+        # O Pylance pode reclamar, mas o 'request' no Allauth carrega o sociallogin
         if hasattr(request, 'sociallogin'):
             print(f"✅ [AUTH] SOCIAL: {user.email} ATIVO.")
             user.is_active = True
         else:
-            print(f"⏳ [AUTH] MANUAL: {user.email} INATIVO (Aguardando OTP).")
+            print(f"⏳ [AUTH] MANUAL: {user.email} INATIVO.")
             user.is_active = False
             
         user.username = user.email
@@ -46,16 +46,16 @@ class MyAccountAdapter(DefaultAccountAdapter):
         return user
 
     def generate_email_confirmation_key(self, email):
-        # Gerando os 6 dígitos que a sua VerifyEmailCodeView espera
+        # Gerando os 6 dígitos que o console deve mostrar
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
-        print(f"🔥 [OTP_DEBUG] Código: {code} para {email}")
+        print(f"🔥 [OTP_DEBUG] CÓDIGO GERADO: {code} para {email}")
         return code
 
     def render_mail(self, template_prefix, email, context, headers=None):
         if 'key' in context:
             context['otp_code'] = context['key']
+        print(f"📧 [EMAIL_DEBUG] Renderizando e-mail para {email}")
         return super().render_mail(template_prefix, email, context, headers)
 
     def get_email_confirmation_url(self, request, emailconfirmation):
-        # Retorna apenas os 6 dígitos para o Allauth não tentar montar um link
         return emailconfirmation.key

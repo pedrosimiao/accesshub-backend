@@ -14,10 +14,9 @@
 
 # serializer padrao de registro (dj-rest-auth)
 from dj_rest_auth.registration.serializers import RegisterSerializer
-# modulo base de serializers do DRF
-from rest_framework import serializers
-# modulo de envio de email do allauth
-from allauth.account.utils import setup_user_email
+
+# modulo de confirmação do signup do allauth
+from allauth.account.utils import complete_signup
 
 # serializer customizado 
 # herda comportamento padrão do serializer dj-rest-auth
@@ -40,6 +39,17 @@ class CustomRegisterSerializer(RegisterSerializer):
         return None
 
     def save(self, request):
-        # salva o user user o comportamento default
-        return super().save(request)
+        # salva user (chama seu MyAccountAdapter.save_user)
+        user = super().save(request)
         
+        # finaliza o processo de registro do Allauth.
+        # dispara o envio de e-mail, gerando o código de 6 dígitos.
+        complete_signup(
+            request, 
+            user, 
+            self.allauth_account_settings.EMAIL_VERIFICATION, 
+            None # signup_url
+        )
+        
+        print(f"📢 [SERIALIZER] complete_signup executado para {user.email}")
+        return user    
