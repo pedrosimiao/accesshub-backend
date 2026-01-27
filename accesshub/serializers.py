@@ -36,7 +36,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         return data
 
     # metodo p/  desativar a validação de username do Allauth/DRF
-    def validate_username(self, username):
+    def validate_username(self, _username):
         
         return None
 
@@ -46,6 +46,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         
         # força configuração do e-mail. 
         # MyAccountAdapter forçado a gerar a chave
-        setup_user_email(request, user)
+        setup_user_email(request, user, [])
         
         return user
