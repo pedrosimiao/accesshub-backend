@@ -18,6 +18,8 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 # modulo de confirmação do signup do allauth
 from allauth.account.utils import complete_signup
 
+from allauth.account import app_settings as allauth_settings
+
 # serializer customizado 
 # herda comportamento padrão do serializer dj-rest-auth
 class CustomRegisterSerializer(RegisterSerializer):
@@ -47,9 +49,9 @@ class CustomRegisterSerializer(RegisterSerializer):
         complete_signup(
             request, 
             user, 
-            self.allauth_account_settings.EMAIL_VERIFICATION, 
-            None # signup_url
+            allauth_settings.EMAIL_VERIFICATION, 
+            None
         )
         
-        print(f"📢 [SERIALIZER] complete_signup executado para {user.email}")
+        print(f"📢 [SERIALIZER] complete_signup executado com sucesso para {user.email}")
         return user    
