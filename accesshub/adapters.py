@@ -17,52 +17,65 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth.models import User
 
+# Print de inicialização para confirmar que o Render carregou o arquivo
+print("🚀 [SISTEMA] accesshub/adapters.py foi carregado!")
+
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
+        """
+        Vincula contas sociais a usuários existentes pelo e-mail
+        para evitar erro de 'email já cadastrado'.
+        """
         if sociallogin.is_existing:
             return
+        
         email = sociallogin.user.email
         if email:
             user = User.objects.filter(email=email).first()
             if user:
+                print(f"🔗 [SOCIAL] Vinculando conta {sociallogin.account.provider} ao user: {email}")
                 sociallogin.connect(request, user)
 
 class MyAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         """
-        Diferencia o fluxo Social do Manual para evitar o loop de redirecionamento.
+        O FUNIL: Todo usuário (Social ou Manual) passa por aqui.
         """
         user = super().save_user(request, user, form, commit=False)
         
-        # Se for login social (Google/GitHub), deixamos Ativo.
-        # Se for manual, desativamos para exigir a ativação por código.
-        if hasattr(request, 'sociallogin'):
+        # CHECAGEM CRÍTICA:
+        # Se vier do Google/GitHub, o objeto 'request' terá o atributo 'sociallogin'
+        is_social = hasattr(request, 'sociallogin')
+        
+        if is_social:
+            print(f"✅ [AUTH] Login SOCIAL detectado para {user.email}. Definindo is_active=True")
             user.is_active = True
         else:
+            print(f"⏳ [AUTH] Login MANUAL detectado para {user.email}. Definindo is_active=False (aguardando OTP)")
             user.is_active = False
             
-        user.username = user.email
+        user.username = user.email # Mantém consistência username = email
+        
         if commit:
             user.save()
         return user
 
     def generate_email_confirmation_key(self, email):
         """
-        ESTE MÉTODO MATA A HASH DE 64 CARACTERES.
-        O Allauth usa isso para gerar a 'key'. Ao retornar 6 dígitos,
-        forçamos o sistema a usar o código numérico no banco e no template.
+        MATA A HASH DE 64 CARACTERES.
+        Substitui o token longo por 6 dígitos numéricos.
         """
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
-        # Com DEBUG=True no Render, este print APARECERÁ nos logs:
-        print(f"\n[DEBUG_RENDER] GERANDO CÓDIGO OTP: {code} para o email {email}\n")
+        print(f"🔥 [OTP] Código gerado para {email}: {code}")
         return code
 
     def render_mail(self, template_prefix, email, context, headers=None):
-        """Entrega o código para o template HTML"""
+        """Prepara os dados para o template HTML do e-mail"""
         if 'key' in context:
             context['otp_code'] = context['key']
+            print(f"📧 [EMAIL] Preparando envio de código {context['key']} para {email}")
         return super().render_mail(template_prefix, email, context, headers)
 
     def get_email_confirmation_url(self, request, emailconfirmation):
-        """Evita que o Allauth tente criar um link longo no email"""
+        """Retorna apenas o código para evitar que o Allauth monte uma URL de link"""
         return emailconfirmation.key
