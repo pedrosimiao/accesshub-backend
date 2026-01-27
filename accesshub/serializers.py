@@ -12,46 +12,36 @@
 # password1 (senha)
 # password2 (confirmação de senha)
 
-# serializer padrao de registro (dj-rest-auth)
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from allauth.account.utils import setup_user_email, send_email_confirmation
 
-# modulo de confirmação do signup do allauth
-from allauth.account.utils import complete_signup
-
-from allauth.account import app_settings as allauth_settings
-
-# serializer customizado 
-# herda comportamento padrão do serializer dj-rest-auth
 class CustomRegisterSerializer(RegisterSerializer):
-    # remove campo username 
-    # p/ não ser validado/obrigatório
-    username = None
+    username = None 
 
-    # metodo p/ remocao do username -> "limpar dados"
     def get_cleaned_data(self):
-        # chama o metodo original -> super().get_cleaned_data()
         data = super().get_cleaned_data()
-        # remove o campo username
         data.pop('username', None)
-        # retorna apenas email e senha
         return data
 
-    # metodo p/  desativar a validação de username do Allauth/DRF
     def validate_username(self, _username):
         return None
 
     def save(self, request):
-        # salva user (chama seu MyAccountAdapter.save_user)
+        # (chama o save_user do Adapter)
         user = super().save(request)
         
-        # finaliza o processo de registro do Allauth.
-        # dispara o envio de e-mail, gerando o código de 6 dígitos.
-        complete_signup(
-            request, 
-            user, 
-            allauth_settings.EMAIL_VERIFICATION, 
-            None
-        )
-        
-        print(f"📢 [SERIALIZER] complete_signup executado com sucesso para {user.email}")
-        return user    
+        # força a criação do registro de e-mail e o envio
+        # ignora qualquer automação que esteja falhando e vai direto
+        try:
+            # validar EmailAddress existe
+            email_address = setup_user_email(request, user, [])
+            
+            # trigger do envio - generate_email_confirmation_key DEVE 
+            # ser chamado
+            send_email_confirmation(request, user, signup=True)
+            print(f"✅ [DEBUG] Fluxo de e-mail forçado para {user.email}")
+            
+        except Exception as e:
+            print(f"❌ [ERRO] Falha ao disparar e-mail: {str(e)}")
+            
+        return user
