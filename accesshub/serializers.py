@@ -46,6 +46,8 @@ class CustomRegisterSerializer(RegisterSerializer):
             print(f"✅ [SERIALIZER] E-mail de confirmação disparado via Adapter para {user.email}")
             
         except Exception as e:
-            print(f"❌ [SERIALIZER_ERROR] Erro ao tentar enviar e-mail: {str(e)}")
+            import traceback
+            print(f"❌ [SERIALIZER_ERROR] Erro detalhado:")
+            print(traceback.format_exc())
             
         return user
