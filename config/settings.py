@@ -276,6 +276,7 @@ REST_AUTH = {
     'SESSION_LOGIN': True,
     'REGISTER_SERIALIZER': 'accesshub.serializers.CustomRegisterSerializer',
     'OLD_PASSWORD_FIELD_ENABLED': True,
+    'LOGIN_ON_REGISTER': False,
 }
 
 
@@ -284,7 +285,7 @@ REST_AUTH = {
 # CONFIGURAÇÃO DE ENVIO DE E-MAIL (NOVO)
 # ==============================================================================
 
-# Backend de Console: em dev (if DEBUG) email aparece no terminal 
+# Backend de Console: (if DEBUG) email aparece no terminal 
 # onde o servidor roda
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
