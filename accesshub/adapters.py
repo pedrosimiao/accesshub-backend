@@ -1,8 +1,6 @@
 # accesshub/adapters.py
 
-
 # ADAPTER PATTERN + DOMAIN LOGIC
-
 
 # definição da lógica de negócios
 # interrompendo o comportamento padrão (fluxos internos) do allauth
@@ -33,7 +31,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         user = super().save_user(request, user, form, commit=False)
         
-        # O Pylance pode reclamar, mas o 'request' no Allauth carrega o sociallogin
+        # check: login social ativa o usuário automaticamente
         if hasattr(request, 'sociallogin'):
             print(f"✅ [AUTH] SOCIAL: {user.email} ATIVO.")
             user.is_active = True
@@ -46,16 +44,22 @@ class MyAccountAdapter(DefaultAccountAdapter):
         return user
 
     def generate_email_confirmation_key(self, email):
-        # Gerando os 6 dígitos que o console deve mostrar
+        # método de fallback. 
+        # Allauth tenta gerar a chave por conta própria,
+        # forçar geração de 6 dígitos.
         code = ''.join(secrets.choice(string.digits) for _ in range(6))
-        print(f"🔥 [OTP_DEBUG] CÓDIGO GERADO: {code} para {email}")
+        print(f"🔥 [ADAPTER_FALLBACK] Código gerado via Adapter: {code}")
         return code
 
     def render_mail(self, template_prefix, email, context, headers=None):
+        # injetando o código (key) no contexto do template para ser usado como 'otp_code'.
         if 'key' in context:
+            # key: o código de 6 dígitos que gravado já no Serializer
             context['otp_code'] = context['key']
-        print(f"📧 [EMAIL_DEBUG] Renderizando e-mail para {email}")
+            
+        print(f"📧 [EMAIL_DEBUG] Renderizando e-mail para {email} com código: {context.get('key')}")
         return super().render_mail(template_prefix, email, context, headers)
 
     def get_email_confirmation_url(self, request, emailconfirmation):
+        # retornar apenas o código.
         return emailconfirmation.key
