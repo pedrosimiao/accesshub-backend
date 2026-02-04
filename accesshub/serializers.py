@@ -14,7 +14,7 @@
 
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
-from allauth.account.models import EmailAddress
+from allauth.account.models import EmailAddress, EmailConfirmation
 
 class CustomRegisterSerializer(RegisterSerializer):
     username = None 
@@ -32,24 +32,29 @@ class CustomRegisterSerializer(RegisterSerializer):
         user = super().save(request)
         
         try:
-            print(f"🕵️ [SERIALIZER] User {user.email} salvo via super(). Buscando EmailAddress...")
+            print(f"🕵️ [SERIALIZER] User {user.email} salvo. Preparando envio de código...")
 
-            # busca o que email address que já existe
-            # Isso evita o AssertionError
-            if EmailAddress.objects.filter(user=user).exists():
+            # busca o objeto EmailAddress vinculado ao usuário
+            # super().save() já criou objeto, então usar .get()
+            email_address = EmailAddress.objects.filter(user=user, email=user.email).first()
+
+            if email_address:
+                # .create():
+                #   chama adapter.generate_email_confirmation_key() (gera os 6 dígitos)
+                #   salva o código no banco vinculado ao email
+                confirmation = EmailConfirmation.create(email_address)
                 
-                # forçamos o envio do email de confirmação (com código de 6 dígitos)
-                adapter = get_adapter(request)
-                adapter.send_confirmation_mail(request, user, signup=True)
+                # envia o email
+                # .send() chama o adapter.render_mail() internamente
+                confirmation.send(request, signup=True)
                 
-                print(f"✅ [SERIALIZER] E-mail disparado com sucesso para {user.email}")
+                print(f"✅ [SERIALIZER] Código de 6 dígitos gerado e enviado para {user.email}")
             else:
-                print(f"⚠️ [SERIALIZER] Estranho: EmailAddress não foi criado automaticamente para {user.email}")
+                print(f"⚠️ [SERIALIZER_ERROR] EmailAddress não encontrado para {user.email}")
 
         except Exception as e:
-            # crítico: logar o erro mas retornar o user para não travar o cadastro
             import traceback
-            print(f"❌ [SERIALIZER_ERROR] Erro ao tentar enviar e-mail:")
+            print(f"❌ [SERIALIZER_ERROR] Falha no fluxo de confirmação:")
             print(traceback.format_exc())
             
         return user
