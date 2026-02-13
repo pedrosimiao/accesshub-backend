@@ -14,8 +14,16 @@ from rest_framework import status
 
 class CustomLoginView(LoginView):
     def login(self):
-        user = self.user
+        # dj-rest-auth preenche self.user apos validacao o serializer
+        user = getattr(self, "user", None)
 
+        # se VerifiedEmailBackend não autenticar 
+        # (senha errada ou user is None)
+        if user is None:
+            # super().login() lança o erro 400 padrão
+            return super().login()
+
+        # se o user existe mas backends.py ou adapter marcou is_active=False
         if not user.is_active:
             raise InactiveUserException()
 
@@ -39,7 +47,8 @@ class VerifyEmailCodeView(APIView):
             user.is_active = True
             user.save()
             
-            return Response({"detail": "Account activated"})
+            print(f"✅ [AUTH] Usuário {user.email} ativado com sucesso!")
+            return Response({"detail": "Account activated"}, status=200)
             
         except EmailConfirmation.DoesNotExist:
             return Response({"detail": "Invalid or expired code"}, status=400)
