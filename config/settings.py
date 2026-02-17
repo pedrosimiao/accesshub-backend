@@ -157,11 +157,11 @@ CORS_ALLOWED_ORIGINS = [
 
 # autoriza o recebimento de POST (frontend + auto-chamadas do Allauth)
 env_csrf_origins = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-CSRF_TRUSTED_ORIGINS = [origin for origin in env_csrf_origins if origin]
+CSRF_TRUSTED_ORIGINS = [origin.rstrip('/') for origin in env_csrf_origins if origin]
 
 CSRF_TRUSTED_ORIGINS += [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
+    "https://accesshub-pedro-simiao.vercel.app",
+    "https://accesshub-backend-pqio.onrender.com"
 ]
 
 # navegador envia o cookie 'sessionid' para o Django
@@ -244,10 +244,19 @@ LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
 SOCIALACCOUNT_LOGIN_REDIRECT_URL = f"{FRONTEND_BASE}/dashboard"
 LOGOUT_REDIRECT_URL = f"{FRONTEND_BASE}/login"
 
-# Django redirecionando para o frontend local após o login social bem-sucedido
-ACCOUNT_ALLOW_OAuth2_REDIRECT_WHITELIST = ['127.0.0.1:5173', 'localhost:5173']
-# Força o Django a aceitar redirecionamentos para hosts que não estão no ALLOWED_HOSTS (front local)
-ALLOWED_REDIRECT_HOSTS = ['127.0.0.1:5173', 'localhost:5173']
+# redirecionando para o frontend local após o login social bem-sucedido
+ACCOUNT_ALLOW_OAuth2_REDIRECT_WHITELIST = [
+    '127.0.0.1:5173', 
+    'localhost:5173',
+    'accesshub-pedro-simiao.vercel.app'
+]
+
+# redirecionamentos
+ALLOWED_REDIRECT_HOSTS = [
+    '127.0.0.1:5173', 
+    'localhost:5173',
+    'accesshub-pedro-simiao.vercel.app'
+]
 
 
 # ==============================================================================
@@ -285,17 +294,16 @@ REST_AUTH = {
 # CONFIGURAÇÃO DE ENVIO DE E-MAIL
 # ==============================================================================
 
-# Backend de Console: (if DEBUG) email aparece no terminal 
-# onde o servidor roda
+# (if DEBUG) email display no terminal de logs do server
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # SMTP externo
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = os.getenv("EMAIL_HOST")
-    EMAIL_PORT = int(os.getenv("EMAIL_PORT", 465))
-    EMAIL_USE_SSL = True
-    EMAIL_USE_TLS = False
+    EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+    EMAIL_USE_TLS = True  # TLS para porta 587
+    EMAIL_USE_SSL = False # SSL desativado (evitar conflitos no Render)
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
