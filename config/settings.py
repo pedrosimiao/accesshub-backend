@@ -282,7 +282,7 @@ REST_AUTH = {
 
 
 # ==============================================================================
-# CONFIGURAÇÃO DE ENVIO DE E-MAIL (NOVO)
+# CONFIGURAÇÃO DE ENVIO DE E-MAIL
 # ==============================================================================
 
 # Backend de Console: (if DEBUG) email aparece no terminal 
@@ -301,7 +301,6 @@ else:
     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # forçar logs em produção
-# settings.py
 
 LOGGING = {
     'version': 1,
