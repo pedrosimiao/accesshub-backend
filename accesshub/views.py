@@ -8,7 +8,5 @@ from django.middleware.csrf import get_token
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
-    # forçar o Django a enviar o Set-Cookie: csrftoken no Header da resposta
-    response = JsonResponse({"detail": "CSRF cookie set"})
-    # enviar o token no corpo para debug
-    return response
+    token = get_token(request)
+    return JsonResponse({"csrfToken": token, "detail": "CSRF cookie set"})
