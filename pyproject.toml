@@ -17,10 +17,10 @@ dependencies = [
     "gunicorn (>=23.0.0,<24.0.0)",
     "whitenoise (>=6.11.0,<7.0.0)",
     "psycopg2-binary (>=2.9.11,<3.0.0)",
-    "dj-database-url (>=3.1.0,<4.0.0)"
+    "dj-database-url (>=3.1.0,<4.0.0)",
+    "django-anymail[brevo] (>=14.0,<15.0)"
 ]
 
-# ADICIONE ESTA SEÇÃO AQUI PARA DESATIVAR O MODO PACOTE
 [tool.poetry]
 package-mode = false
 

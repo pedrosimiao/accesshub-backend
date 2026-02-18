@@ -68,6 +68,9 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     # provedor github
     "allauth.socialaccount.providers.github",
+
+    # transforma o e-mail em uma requisição HTTPS (Porta 443)
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -297,16 +300,29 @@ REST_AUTH = {
 # (if DEBUG) email display no terminal de logs do server
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# SMTP externo
 else:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.getenv("EMAIL_HOST")
-    EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-    EMAIL_USE_TLS = True  # TLS para porta 587
-    EMAIL_USE_SSL = False # SSL desativado (evitar conflitos no Render)
-    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-    DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+    # EM PRODUÇÃO: Anymail + Brevo API
+    EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+    
+    ANYMAIL = {
+        "BREVO_API_KEY": os.getenv("BREVO_API_KEY"),
+    }
+
+# remetente
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+# if DEBUG:
+#     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# # SMTP externo
+# else:
+#     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+#     EMAIL_HOST = os.getenv("EMAIL_HOST")
+#     EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+#     EMAIL_USE_TLS = True  # TLS para porta 587
+#     EMAIL_USE_SSL = False # SSL desativado (evitar conflitos no Render)
+#     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+#     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+#     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # forçar logs em produção
 
