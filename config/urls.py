@@ -4,9 +4,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 from accesshub.views import get_csrf_token
-from accesshub.auth_views import CustomLoginView, VerifyEmailCodeView
+from accesshub.auth_views import CustomLoginView, VerifyEmailCodeView, ResendOTPView
 from allauth.account.views import confirm_email
-from django.contrib.sites.models import Site # Importe o modelo
+from django.contrib.sites.models import Site # modelo
 
 # --- BLOCO DE REPARO TEMPORÁRIO ---
 # --- CONFIG EXPLÍCITA DE DOMINIO HOSPEDADO EM PROD ---
@@ -39,6 +39,10 @@ urlpatterns = [
     # Auth base (dj-rest-auth)
     # ========================
     path("api/v1/auth/login/", CustomLoginView.as_view(), name="rest_login"),
+    
+    # (Reenvio de OTP)
+    path("api/v1/auth/resend-otp/", ResendOTPView.as_view(), name="resend_otp"),
+    
     path("api/v1/auth/", include("dj_rest_auth.urls")),
 
     # ========================
@@ -73,5 +77,11 @@ urlpatterns = [
     # ========================
     path("api/v1/auth/inactive/", lambda r: None, name="account_inactive"),
     path("api/v1/auth/confirm-email-sent/", lambda r: None, name="account_email_verification_sent"),
+
+    # Dummy path para o dj-rest-auth gerar o e-mail de 
+    # "Esqueceu a senha" sem quebrar.
+    # frontend lida com essa rota real 
+    # (ex: /reset-password/:uid/:token)
+    path("api/v1/auth/password/reset/confirm/<uidb64>/<token>/", lambda r: None, name="password_reset_confirm"),
 ]
 
