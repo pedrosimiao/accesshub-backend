@@ -14,7 +14,9 @@
 
 import secrets
 import string
+from django.conf import settings
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import PasswordResetSerializer
 from allauth.account.models import EmailAddress, EmailConfirmation
 from allauth.account.adapter import get_adapter
 
@@ -66,3 +68,18 @@ class CustomRegisterSerializer(RegisterSerializer):
             print(traceback.format_exc())
             
         return user
+
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    def save(self):
+        request = self.context.get('request')
+        
+        opts = {
+            'use_https': request.is_secure(),
+            'from_email': getattr(settings, 'DEFAULT_FROM_EMAIL'),
+            'request': request,
+            'extra_email_context': {
+                'frontend_url': settings.FRONTEND_BASE,
+            }
+        }
+        self.reset_form.save(**opts)

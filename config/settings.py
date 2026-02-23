@@ -287,6 +287,7 @@ REST_AUTH = {
     'USE_JWT': False,
     'SESSION_LOGIN': True,
     'REGISTER_SERIALIZER': 'accesshub.serializers.CustomRegisterSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'accesshub.serializers.CustomPasswordResetSerializer',
     'OLD_PASSWORD_FIELD_ENABLED': True,
     'LOGIN_ON_REGISTER': False,
 }
@@ -310,19 +311,6 @@ else:
 
 # remetente
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
-
-# if DEBUG:
-#     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# # SMTP externo
-# else:
-#     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-#     EMAIL_HOST = os.getenv("EMAIL_HOST")
-#     EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-#     EMAIL_USE_TLS = True  # TLS para porta 587
-#     EMAIL_USE_SSL = False # SSL desativado (evitar conflitos no Render)
-#     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-#     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-#     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # forçar logs em produção
 
